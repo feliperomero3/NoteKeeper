@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by Jim.
  */
 
-public final class NoteInfo {
+public final class NoteInfo implements Parcelable {
     private CourseInfo mCourse;
     private String mTitle;
     private String mText;
@@ -16,6 +16,12 @@ public final class NoteInfo {
         mCourse = course;
         mTitle = title;
         mText = text;
+    }
+
+    protected NoteInfo(Parcel in) {
+        mCourse = in.readParcelable(CourseInfo.class.getClassLoader());
+        mTitle = in.readString();
+        mText = in.readString();
     }
 
     public CourseInfo getCourse() {
@@ -66,4 +72,27 @@ public final class NoteInfo {
         return getCompareKey();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeParcelable(mCourse, 0);
+        parcel.writeString(mTitle);
+        parcel.writeString(mText);
+    }
+
+    public static final Creator<NoteInfo> CREATOR = new Creator<NoteInfo>() {
+        @Override
+        public NoteInfo createFromParcel(Parcel in) {
+            return new NoteInfo(in);
+        }
+
+        @Override
+        public NoteInfo[] newArray(int size) {
+            return new NoteInfo[size];
+        }
+    };
 }
