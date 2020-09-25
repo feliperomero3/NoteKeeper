@@ -6,6 +6,11 @@
 This Android Application is based on the Understanding Android Applications Basics Course by Jim Wilson
 hosted at Pluralsight.
 
+## Prerequisites
+
+- Android 3.0 or greater
+- Android API 29
+
 ## License
 
 [MIT License](LICENSE)
