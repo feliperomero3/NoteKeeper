@@ -14,7 +14,6 @@ import androidx.appcompat.widget.Toolbar;
 import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
-
     public static final String NOTE_INFO = "mx.feliperomero.notekeeper.NOTE_INFO";
     private NoteInfo mNote;
 
