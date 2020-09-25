@@ -16,6 +16,7 @@ import java.util.List;
 public class NoteActivity extends AppCompatActivity {
     public static final String NOTE_INFO = "mx.feliperomero.notekeeper.NOTE_INFO";
     private NoteInfo mNote;
+    private boolean mIsNewNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,9 @@ public class NoteActivity extends AppCompatActivity {
         EditText textNoteTitle = findViewById(R.id.text_note_title);
         EditText textNoteText = findViewById(R.id.text_note_text);
 
-        displayNote(spinnerCourses, textNoteTitle, textNoteText);
+        if (!mIsNewNote) {
+            displayNote(spinnerCourses, textNoteTitle, textNoteText);
+        }
     }
 
     private void displayNote(Spinner spinnerCourses, EditText textNoteTitle, EditText textNoteText) {
@@ -51,7 +54,7 @@ public class NoteActivity extends AppCompatActivity {
     private void readDisplayStateValues() {
         Intent intent = getIntent();
         mNote = intent.getParcelableExtra(NOTE_INFO);
-
+        mIsNewNote = mNote == null;
     }
 
     @Override
