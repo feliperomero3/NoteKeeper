@@ -10,6 +10,7 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
 
@@ -23,9 +24,7 @@ public class NoteActivity extends AppCompatActivity {
     private EditText mTextNoteText;
     private int mNotePosition;
     private boolean mIsCancelling;
-    private String mOriginalNoteCourseId;
-    private String mOriginalNoteTitle;
-    private String mOriginalNoteText;
+    private NoteActivityViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +32,15 @@ public class NoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ViewModelProvider viewModelProvider = new ViewModelProvider(getViewModelStore(),
+                ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
+        mViewModel = viewModelProvider.get(NoteActivityViewModel.class);
+
+        if (mViewModel.mIsNewlyCreated && savedInstanceState != null)
+            mViewModel.restoreState(savedInstanceState);
+
+        mViewModel.mIsNewlyCreated = false;
 
         mSpinnerCourses = findViewById(R.id.spinner_courses);
 
@@ -54,12 +62,12 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void saveOriginalNoteValues() {
-        if (mIsNewNote){
+        if (mIsNewNote) {
             return;
         }
-        mOriginalNoteCourseId = mNote.getCourse().getCourseId();
-        mOriginalNoteTitle = mNote.getTitle();
-        mOriginalNoteText = mNote.getText();
+        mViewModel.mOriginalNoteCourseId = mNote.getCourse().getCourseId();
+        mViewModel.mOriginalNoteTitle = mNote.getTitle();
+        mViewModel.mOriginalNoteText = mNote.getText();
     }
 
     @Override
@@ -76,11 +84,19 @@ public class NoteActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (outState != null) {
+            mViewModel.saveState(outState);
+        }
+    }
+
     private void restorePreviousNoteValues() {
-        CourseInfo course = DataManager.getInstance().getCourse(mOriginalNoteCourseId);
+        CourseInfo course = DataManager.getInstance().getCourse(mViewModel.mOriginalNoteCourseId);
         mNote.setCourse(course);
-        mNote.setTitle(mOriginalNoteTitle);
-        mNote.setText(mOriginalNoteText);
+        mNote.setTitle(mViewModel.mOriginalNoteTitle);
+        mNote.setText(mViewModel.mOriginalNoteText);
     }
 
     private void saveNote() {
