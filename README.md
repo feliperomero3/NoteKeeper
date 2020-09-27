@@ -8,7 +8,7 @@ hosted at Pluralsight.
 
 ## Prerequisites
 
-- Android 3.0 or greater
+- Android Studio 3.0 or greater
 - Android API 29
 
 ## License
